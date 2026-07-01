@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>服务设计考情分析</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f5f7fa;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding: 40px 24px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ── 头部 ── */
+    .page-eyebrow {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: #aaa;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .page-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #1a1a1a;
+      letter-spacing: 0.01em;
+      margin-bottom: 4px;
+    }
+
+    .page-title .accent {
+      color: #F5C518;
+    }
+
+    .page-sub {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 20px;
+    }
+
+    /* ── 主表容器 ── */
+    .table-wrap {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #e8edf5;
+      background: #fff;
+    }
+
+    /* ── 主表 ── */
+    .main-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .main-table col.c-year    { width: 8%; }
+    .main-table col.c-subject { width: 8%; }
+    .main-table col.c-content { width: 30%; }
+    .main-table col.c-type    { width: 18%; }
+    .main-table col.c-score   { width: 18%; }
+    .main-table col.c-pct     { width: 18%; }
+
+    .main-table thead th {
+      background: #F5C518;
+      padding: 11px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1a1a1a;
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── 数据行 ── */
+    .main-table tbody tr.data-row {
+      border-bottom: 1px solid #f0f3f8;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .main-table tbody tr.data-row:hover {
+      background: #fffdf0;
+    }
+
+    .main-table tbody tr.data-row td {
+      padding: 13px 16px;
+      font-size: 13px;
+      text-align: center;
+      vertical-align: middle;
+      color: #333;
+    }
+
+    .main-table tbody tr.data-row td.content-cell {
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    /* ── 空行 ── */
+    .main-table tbody tr.empty-row {
+      border-bottom: 1px solid #f0f3f8;
+    }
+
+    .main-table tbody tr.empty-row td {
+      padding: 13px 16px;
+      font-size: 13px;
+      text-align: center;
+      color: #c0c0c0;
+    }
+
+    /* ── 展开行 ── */
+    .main-table tbody tr.detail-row {
+      display: none;
+    }
+
+    .main-table tbody tr.detail-row.open {
+      display: table-row;
+    }
+
+    .main-table tbody tr.detail-row td {
+      padding: 0;
+      border-bottom: 1px solid #f0f3f8;
+    }
+
+    /* ── 展开区域内容 ── */
+    .detail-inner {
+      padding: 12px 20px 14px;
+      border-top: 1px solid #f5f7fa;
+      background: #fafbfd;
+    }
+
+    .detail-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #bbb;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    /* ── 展开后的子表 ── */
+    .detail-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      table-layout: fixed;
+    }
+
+    .detail-table col.dc-q  { width: 62%; }
+    .detail-table col.dc-t  { width: 10%; }
+    .detail-table col.dc-c  { width: 28%; }
+
+    .detail-table td {
+      padding: 10px 14px;
+      text-align: left;
+      color: #444;
+      border-bottom: 1px solid #edf0f5;
+      vertical-align: middle;
+      line-height: 1.65;
+    }
+
+    .detail-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* ── 箭头指示 ── */
+    .row-indicator {
+      display: inline-block;
+      font-size: 9px;
+      color: #F5C518;
+      margin-left: 5px;
+      transition: transform 0.18s ease;
+      vertical-align: middle;
+    }
+
+    tr.data-row.open .row-indicator {
+      transform: rotate(180deg);
+    }
+
+    .type-label {
+      color: #aaa;
+      font-size: 12px;
+    }
+
+    /* ── 脚注 ── */
+    .note {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #c0c0c0;
+      letter-spacing: 0.01em;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="page-eyebrow">EXAM ANALYSIS</div>
+    <div class="page-title">服务设计<span class="accent">·</span>考情分析</div>
+    <div class="page-sub">2022—2026 年北师大设计学考研真题梳理</div>
+
+    <div class="table-wrap">
+      <table class="main-table">
+        <colgroup>
+          <col class="c-year">
+          <col class="c-subject">
+          <col class="c-content">
+          <col class="c-type">
+          <col class="c-score">
+          <col class="c-pct">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>年份</th>
+            <th>科目</th>
+            <th>服务设计内容</th>
+            <th>题型</th>
+            <th>估算分值</th>
+            <th>占科目总分</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- 2022 837 -->
+          <tr class="data-row" onclick="toggle(this,'d-2022-837')">
+            <td>2022</td><td>837</td>
+            <td class="content-cell">3道（1简答 + 2论述）<span class="row-indicator">▼</span></td>
+            <td>简答 + 论述</td><td>~75</td><td>~50%</td>
+          </tr>
+          <tr class="detail-row" id="d-2022-837">
+            <td colspan="6">
+              <div class="detail-inner">
+                <div class="detail-label">题目详情</div>
+                <table class="detail-table">
+                  <colgroup><col class="dc-q"><col class="dc-t"><col class="dc-c"></colgroup>
+                  <tbody>
+                    <tr><td>谈谈你对未来设计的理解</td><td><span class="type-label">简答</span></td><td>服务设计的特点</td></tr>
+                    <tr><td>艺术设计与其他学科的交叉案例有什么？</td><td><span class="type-label">论述</span></td><td>服务设计的跨学科性</td></tr>
+                    <tr><td>结合具体的产品或者服务，谈谈未来设计的趋势</td><td><span class="type-label">论述</span></td><td>服务设计的非物质性</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 2023 837 -->
+          <tr class="data-row" onclick="toggle(this,'d-2023-837')">
+            <td>2023</td><td>837</td>
+            <td class="content-cell">2道（1简答 + 1论述）<span class="row-indicator">▼</span></td>
+            <td>简答 + 论述</td><td>~45</td><td>~30%</td>
+          </tr>
+          <tr class="detail-row" id="d-2023-837">
+            <td colspan="6">
+              <div class="detail-inner">
+                <div class="detail-label">题目详情</div>
+                <table class="detail-table">
+                  <colgroup><col class="dc-q"><col class="dc-t"><col class="dc-c"></colgroup>
+                  <tbody>
+                    <tr><td>如何理解服务设计？</td><td><span class="type-label">简答</span></td><td>服务设计的定义</td></tr>
+                    <tr><td>论述服务设计的基本流程及各个阶段的主要任务</td><td><span class="type-label">论述</span></td><td>服务设计的流程</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 2024 空 -->
+          <tr class="empty-row">
+            <td>2024</td><td>—</td><td>837 / 728 均未设考</td><td>—</td><td>—</td><td>—</td>
+          </tr>
+
+          <!-- 2025 728 -->
+          <tr class="data-row" onclick="toggle(this,'d-2025-728')">
+            <td>2025</td><td>728</td>
+            <td class="content-cell">1道（简答）<span class="row-indicator">▼</span></td>
+            <td>简答</td><td>~15</td><td>~10%</td>
+          </tr>
+          <tr class="detail-row" id="d-2025-728">
+            <td colspan="6">
+              <div class="detail-inner">
+                <div class="detail-label">题目详情</div>
+                <table class="detail-table">
+                  <colgroup><col class="dc-q"><col class="dc-t"><col class="dc-c"></colgroup>
+                  <tbody>
+                    <tr><td>简述未来设计师应具备哪些素养</td><td><span class="type-label">简答</span></td><td>服务设计的特点</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 2025 837 -->
+          <tr class="data-row" onclick="toggle(this,'d-2025-837')">
+            <td>2025</td><td>837</td>
+            <td class="content-cell">2道（2论述）<span class="row-indicator">▼</span></td>
+            <td>论述</td><td>~60</td><td>~40%</td>
+          </tr>
+          <tr class="detail-row" id="d-2025-837">
+            <td colspan="6">
+              <div class="detail-inner">
+                <div class="detail-label">题目详情</div>
+                <table class="detail-table">
+                  <colgroup><col class="dc-q"><col class="dc-t"><col class="dc-c"></colgroup>
+                  <tbody>
+                    <tr><td>论述"跨学科合作"对设计的必要性，并结合近期设计热点谈谈如何通过跨学科合作完成复杂设计项目</td><td><span class="type-label">论述</span></td><td>服务设计的跨学科性</td></tr>
+                    <tr><td>某一老城区具有深厚的文化，但知名度不高。为了提升老城区文化知名度，请提出相应的街区改造策略和文化品牌建设方案</td><td><span class="type-label">论述</span></td><td>服务设计思维的应用</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 2026 728 -->
+          <tr class="data-row" onclick="toggle(this,'d-2026-728')">
+            <td>2026</td><td>728</td>
+            <td class="content-cell">1道（名解）<span class="row-indicator">▼</span></td>
+            <td>名解</td><td>~5</td><td>~3%</td>
+          </tr>
+          <tr class="detail-row" id="d-2026-728">
+            <td colspan="6">
+              <div class="detail-inner">
+                <div class="detail-label">题目详情</div>
+                <table class="detail-table">
+                  <colgroup><col class="dc-q"><col class="dc-t"><col class="dc-c"></colgroup>
+                  <tbody>
+                    <tr><td>服务设计（名词解释）</td><td><span class="type-label">名解</span></td><td>服务设计的定义</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 2026 837 -->
+          <tr class="data-row" onclick="toggle(this,'d-2026-837')">
+            <td>2026</td><td>837</td>
+            <td class="content-cell">1道（论述）<span class="row-indicator">▼</span></td>
+            <td>论述</td><td>~30</td><td>~20%</td>
+          </tr>
+          <tr class="detail-row" id="d-2026-837">
+            <td colspan="6">
+              <div class="detail-inner">
+                <div class="detail-label">题目详情</div>
+                <table class="detail-table">
+                  <colgroup><col class="dc-q"><col class="dc-t"><col class="dc-c"></colgroup>
+                  <tbody>
+                    <tr><td>请你以设计思维为原则，设计一个方案，完成一次真诚的道歉（不限形式）</td><td><span class="type-label">论述</span></td><td>服务设计思维的应用</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <p class="note">* 估算依据：论述题约 30 分/题，简答题约 15 分/题，名词解释约 5 分/题；以 150 分制为基准</p>
+
+  </div>
+
+  <script>
+    function toggle(row, id) {
+      const detail = document.getElementById(id);
+      const isOpen = detail.classList.contains('open');
+      document.querySelectorAll('.detail-row.open').forEach(el => el.classList.remove('open'));
+      document.querySelectorAll('.data-row.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) {
+        detail.classList.add('open');
+        row.classList.add('open');
+      }
+    }
+  </script>
+
+</body>
+</html>
