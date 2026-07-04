@@ -262,6 +262,95 @@
       color: #bbb;
       margin-top: 8px;
     }
+
+    /* ── 手机适配 ── */
+    @media (max-width: 640px) {
+      body {
+        padding: 20px 14px;
+      }
+
+      .tabs {
+        gap: 0;
+        margin-bottom: 16px;
+      }
+
+      .tab-btn {
+        padding: 8px 14px;
+        font-size: 13px;
+      }
+
+      .panel-title {
+        font-size: 15px;
+        margin-bottom: 12px;
+      }
+
+      /* 表格容器横滑 */
+      .table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+        margin-bottom: 16px;
+      }
+
+      /* 全部页：隐藏分值列，收窄年份/科目 */
+      .all-table {
+        min-width: 420px;
+      }
+
+      .all-table col.ca-year    { width: 10%; }
+      .all-table col.ca-subject { width: 10%; }
+      .all-table col.ca-type    { width: 13%; }
+      .all-table col.ca-score   { display: none; }
+      .all-table col.ca-q       { width: 67%; }
+
+      .all-table thead th:nth-child(4) { display: none; }
+      .all-table tbody td.td-center:nth-child(4) { display: none; }
+
+      .all-table thead th {
+        padding: 9px 10px;
+        font-size: 11px;
+      }
+
+      .all-table tbody tr.q-row td {
+        padding: 9px 10px;
+        font-size: 12px;
+      }
+
+      /* 服务设计/艺科分析表 */
+      .main-table {
+        min-width: 480px;
+      }
+
+      .main-table col.c-year    { width: 10%; }
+      .main-table col.c-subject { width: 10%; }
+      .main-table col.c-content { width: 32%; }
+      .main-table col.c-type    { width: 16%; }
+      .main-table col.c-score   { width: 16%; }
+      .main-table col.c-pct     { width: 16%; }
+
+      .main-table thead th {
+        padding: 9px 10px;
+        font-size: 11px;
+      }
+
+      .main-table tbody tr.data-row td,
+      .main-table tbody tr.empty-row td {
+        padding: 10px 10px;
+        font-size: 12px;
+      }
+
+      .detail-inner {
+        padding: 10px 12px;
+      }
+
+      .detail-table {
+        font-size: 12px;
+      }
+
+      .detail-table td {
+        padding: 9px 10px;
+      }
+    }
   </style>
 </head>
 <body>
